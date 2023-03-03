@@ -2,10 +2,6 @@ const cloudinary = require('cloudinary').v2
 const { createRouter } = require('next-connect')
 const multer = require('multer')
 
-const CLOUDINARY_CLOUD_NAME = 'dtp9alejv'
-const CLOUDINARY_API_KEY = '756857925269576'
-const CLOUDINARY_API_SECRET = 'n_Iiqy8aoRit4PbT7FX0FbNRGkw'
-
 const upload = multer({
   storage: multer.memoryStorage()
 })
@@ -17,9 +13,9 @@ router.use(upload.single('file'))
 router.post(async (req, res) => {
   const fontName = req.body.fontName + '.' + req.body.fontType
   cloudinary.config({
-    cloud_name: CLOUDINARY_CLOUD_NAME,
-    api_key: CLOUDINARY_API_KEY,
-    api_secret: CLOUDINARY_API_SECRET
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
   })
   cloudinary.uploader.upload_stream({
     resource_type: 'raw',
