@@ -1,17 +1,6 @@
 import { useContext } from 'react'
-import { DesignContext } from '../contexts/design'
-import imageModifications from '../helpers/imageModifications'
-
-// const ROUTES_WITHOUT_DESIGN = [
-//   '/generate-merch',
-//   '/generate-merch/',
-//   '/generate-merch/generate-design',
-//   '/generate-merch/upload-design'
-// ]
-
-// const ROUTES_WITH_DESIGN = [
-//   '/generate-merch/edit-design'
-// ]
+import { DesignContext } from '@/contexts/design'
+import imageModifications from '@/helpers/imageModifications'
 
 export default function useDesign() {
   const {

@@ -1,13 +1,13 @@
-import { Cloudinary } from '@cloudinary/url-gen'
+import { Cloudinary, Transformation } from '@cloudinary/url-gen'
 import { grayscale, blur, backgroundRemoval, cartoonify } from '@cloudinary/url-gen/actions/effect'
 import { source } from '@cloudinary/url-gen/actions/overlay'
 import { scale } from '@cloudinary/url-gen/actions/resize'
 import { TextStyle } from '@cloudinary/transformation-builder-sdk/qualifiers/textStyle'
 import { text } from '@cloudinary/url-gen/qualifiers/source'
-// import { max } from '@cloudinary/url-gen/actions/roundCorners'
+import { byAngle } from '@cloudinary/url-gen/actions/rotate'
+import { max, byRadius } from '@cloudinary/url-gen/actions/roundCorners'
 // import { source } from '@cloudinary/url-gen/actions/overlay'
 // import { text } from '@cloudinary/url-gen/qualifiers/source'
-// import { TextStyle } from "@cloudinary/url-gen/qualifiers/textStyle"
 
 const cloudinary = new Cloudinary({
   cloud: {
@@ -30,9 +30,15 @@ const cartoonifyFilter = (image) => image.effect(cartoonify())
 
 const blurFilter = (image, value) => image.effect(blur().strength(value))
 
-const addText = (image, value) => {
-  const textConfig = new TextStyle('my-font.ttf', 24)
-  return image.overlay(source(text('Hola mundo', textConfig)))
+const rotateImage = (image, value) => image.rotate(byAngle(value))
+
+const roundCorners = (image, value) => image.roundCorners(byRadius(value))
+
+const roundCircle = (image) => image.roundCorners(max())
+
+const addText = (image, { textContent, fontName, fontSize, angle, color }) => {
+  const textConfig = new TextStyle(fontName, fontSize)
+  return image.overlay(source(text(textContent, textConfig).textColor(color).transformation(new Transformation().rotate(byAngle(angle)))))
 }
 
 export default {
@@ -42,5 +48,8 @@ export default {
   grayScaleFilter,
   cartoonifyFilter,
   blurFilter,
-  addText
+  addText,
+  rotateImage,
+  roundCorners,
+  roundCircle
 }

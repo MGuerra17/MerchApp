@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { createDesign, uploadDesign } from '../services/design'
-import useDesign from '../hooks/useDesign'
+import { createDesign, uploadDesign } from '@/services/design'
+import useDesign from '@/hooks/useDesign'
 
 export default function GenerateDesign() {
   const [prompt, setPrompt] = useState('')

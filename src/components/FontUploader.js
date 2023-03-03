@@ -43,7 +43,7 @@ export default function FontUploader() {
 
   const handleFontNameChange = (e) => {
     const fontNameValue = e.target.value
-    if (fonts.includes(fontNameValue + '.ttf')) {
+    if (fonts.includes(fontNameValue + '.' + fontType)) {
       setWarning('Esta fuente ya existe')
     } else {
       setWarning('')
@@ -51,10 +51,20 @@ export default function FontUploader() {
     setFontName(fontNameValue)
   }
 
+  const handleFontTypeChange = (e) => {
+    const fontTypeValue = e.target.value
+    if (fonts.includes(fontName + '.' + fontTypeValue)) {
+      setWarning('Esta fuente ya existe')
+    } else {
+      setWarning('')
+    }
+    setFontType(fontTypeValue)
+  }
+
   return (
     <div>
       <input className='border-2 border-blue-300' type='text' name='fontName' value={fontName} onChange={handleFontNameChange} />
-      <select value={fontType} name='fontType' onChange={(e) => setFontType(e.target.value)}>
+      <select value={fontType} name='fontType' onChange={handleFontTypeChange}>
         <option value='ttf'>ttf</option>
         <option value='otf'>otf</option>
         <option value='fnt'>fnt</option>
@@ -64,7 +74,7 @@ export default function FontUploader() {
         id='uploadFont'
         action='/api/uploadFont'
         method='post'
-        className='w-60 h-60 border-dashed border-2 border-gray-400 p-8 flex justify-center items-center cursor-pointer'
+        className='w-32 h-32 border-dashed border-2 border-gray-400 p-8 flex justify-center items-center cursor-pointer'
       >
         Subir fuente
       </form>
