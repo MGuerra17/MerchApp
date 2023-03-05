@@ -1,7 +1,9 @@
+import { Spinner } from 'flowbite-react'
 export default function FullPageLoading() {
   return (
-    <div className='w-full h-screen bg-sky-300 flex items-center justify-center'>
-      <h1 className='text-2xl'>CARGANDO...</h1>
+    <div className='w-full bg-slate-600/20 absolute inset-0 m-auto z-10 flex justify-center items-center'>
+      <Spinner aria-label='Loading...' size='xl' />
     </div>
+
   )
 }

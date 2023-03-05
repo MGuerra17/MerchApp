@@ -49,6 +49,7 @@ export default function TextEditor() {
         type='text'
         className='bg-gray-100 rounded-md p-2 w-20 mx-1'
         value={angle}
+        placeholder='Angulo'
         onChange={(e) => setAngle(e.target.value)}
         required
       />

@@ -1,38 +1,59 @@
 import { useState } from 'react'
 import { createDesign, uploadDesign } from '@/services/design'
 import useDesign from '@/hooks/useDesign'
+import RouteValidator from '@/components/RouteValidator'
+import Image from 'next/image'
+import AiSvg from '../../../public/AiSvg'
+import RightArrowSvg from '../../../public/RightArrowSvg'
 
 export default function GenerateDesign() {
   const [prompt, setPrompt] = useState('')
   const [result, setResult] = useState('')
-  const { setOriginalFile, setPublicId, setModifiedFile } = useDesign()
+  const [error, setError] = useState('')
+  const { saveOriginalFile, savePublicId, setModifiedFile, saveDimensions } = useDesign()
 
   const handleGenerateImage = async () => {
     const file = await createDesign(prompt)
-    setResult(file)
+    setResult(file?.data)
+    if (!file?.data) setError('An error occurred while trying to create the image')
   }
 
   const handleUploadImage = async () => {
-    const res = await uploadDesign(result)
-    window.localStorage.setItem('publicId', res.public_id)
-    window.localStorage.setItem('modifiedFile', res.secure_url)
-    window.localStorage.setItem('originalFile', res.secure_url)
-    setPublicId(res.public_id)
-    setModifiedFile(res.secure_url)
-    setOriginalFile(res.secure_url)
+    if (!result) return setError('')
+    const { public_id, secure_url, width, height } = await uploadDesign(result)
+    saveDimensions({ width, height })
+    savePublicId(public_id)
+    saveOriginalFile(secure_url)
+    setModifiedFile(secure_url)
   }
 
   return (
-    <div className='flex flex-col w-full bg-slate-100 items-center justify-center'>
-      <h1 className='my-3'>Welcome to merch generator</h1>
-      <textarea className='w-80' placeholder='Write prompt...' onChange={(e) => setPrompt(e.target.value)} />
-      <button className='bg-sky-300 rounded-md p-2 my-5' onClick={handleGenerateImage}>Generar imagen</button>
-      <div className='my-5 bg-slate-200 p-8 w-96 h-96 flex items-center justify-center'>
-        {result.length > 0
-          ? <img className='w-full object-cover' src={result} alt={result} />
-          : <p>Genera una imagen</p>}
+    <RouteValidator>
+      <div className='flex w-full flex-wrap md:flex-nowrap'>
+        <div className='w-2/5 md:h-screen flex justify-center items-center px-16'>
+          <div className='flex flex-col w-full bg-slate-800 rounded-xl px-8 py-10'>
+            <div className='flex justify-center items-center'>
+              <AiSvg />
+            </div>
+            <h1 className='text-2xl mt-3 mb-12 text-white text-center font-bold'>Generate design</h1>
+            <div className='bg-slate-600 rounded-lg'>
+              <label htmlFor='message' className='block mb-2 text-sm font-medium text-gray-900 dark:text-slate-100 pt-1 pl-3'>Prompt</label>
+              <textarea id='message' rows='4' className='block resize-none p-2.5 h-56 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='Write your thoughts here...' onChange={(e) => setPrompt(e.target.value)} />
+            </div>
+            <p className='text-red-500'>{error}</p>
+            <button className='bg-blue-700 text-white rounded-md p-2 mt-12 w-max mx-auto' onClick={handleGenerateImage}>Generar imagen</button>
+          </div>
+        </div>
+        <div className='w-3/5 md:h-screen flex flex-col items-center justify-center relative border-l border-slate-800'>
+          <div className='bg-slate-600 rounded-lg aspect-video w-3/4 max-w-2xl '>
+            <p className='block mb-2 text-sm font-medium text-gray-900 dark:text-slate-100 pt-1 pl-3'>Generated image</p>
+            <div className='relative h-full w-full bg-black rounded-lg'>
+              <Image className='rounded-lg' src={result || '/image-placeholder.jpg'} priority fill sizes='(max-width: 768px) 100vw,(max-width: 1200px) 50vw,33vw' alt={result} />
+            </div>
+          </div>
+          {result && <button className='m-8 absolute bottom-0 right-0 w-16 h-16 dark:text-gray-400 dark:hover:text-blue-700 duration-200 hover:scale-110' onClick={handleUploadImage}><RightArrowSvg /></button>}
+        </div>
       </div>
-      <button className='bg-sky-300 rounded-md p-2 my-5' onClick={handleUploadImage}>Upload</button>
-    </div>
+    </RouteValidator>
   )
 }

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useDesign from '@/hooks/useDesign'
 import FullPageLoading from './FullPageLoading'
@@ -16,9 +16,11 @@ const ROUTES_WITH_DESIGN = [
 
 export default function RouteValidator({ children }) {
   const { originalFile } = useDesign()
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true)
     const originalFileURL = window.localStorage.getItem('originalFile')
     const isNotProtectedRoute = ROUTES_WITHOUT_DESIGN.includes(router.pathname)
     const isProtectedRoute = ROUTES_WITH_DESIGN.includes(router.pathname)
@@ -27,7 +29,8 @@ export default function RouteValidator({ children }) {
     } else if (!originalFileURL && isProtectedRoute) {
       router.push('/generateMerch')
     }
+    setLoading(false)
   }, [originalFile])
 
-  return originalFile ? children : <FullPageLoading />
+  return loading ? <FullPageLoading /> : children
 }

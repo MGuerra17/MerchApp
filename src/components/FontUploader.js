@@ -6,6 +6,7 @@ export default function FontUploader() {
   const [fontName, setFontName] = useState('')
   const [fontType, setFontType] = useState('ttf')
   const [warning, setWarning] = useState('')
+  const [uploaded, setUploaded] = useState(false)
   const { saveFont, fonts } = useDesign()
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function FontUploader() {
     })
 
     dropzoneForm.on('success', (file, response) => {
+      setUploaded(true)
       saveFont(response.public_id)
       console.log(response)
     })
@@ -45,6 +47,8 @@ export default function FontUploader() {
     const fontNameValue = e.target.value
     if (fonts.includes(fontNameValue + '.' + fontType)) {
       setWarning('Esta fuente ya existe')
+    } else if (fontNameValue === '') {
+      setWarning('Debe ingresar un nombre valido')
     } else {
       setWarning('')
     }
@@ -55,6 +59,8 @@ export default function FontUploader() {
     const fontTypeValue = e.target.value
     if (fonts.includes(fontName + '.' + fontTypeValue)) {
       setWarning('Esta fuente ya existe')
+    } else if (fontType === '') {
+      setWarning('Debe ingresar un nombre valido')
     } else {
       setWarning('')
     }
@@ -69,14 +75,14 @@ export default function FontUploader() {
         <option value='otf'>otf</option>
         <option value='fnt'>fnt</option>
       </select>
-      {warning && <p className='text-yellow-500'>{warning}</p>}
+      {warning && <p className='text-yellow-500 text-xs'>{warning}</p>}
       <form
         id='uploadFont'
         action='/api/uploadFont'
         method='post'
-        className='w-32 h-32 border-dashed border-2 border-gray-400 p-8 flex justify-center items-center cursor-pointer'
+        className={`w-32 h-32 border-dashed border-2 border-gray-400 p-8 flex justify-center items-center cursor-pointer ${!fontName && 'hidden'}`}
       >
-        Subir fuente
+        {!uploaded && 'Subir fuente'}
       </form>
     </div>
   )

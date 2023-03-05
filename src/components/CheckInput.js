@@ -1,17 +1,22 @@
 import useDesign from '@/hooks/useDesign'
-
+import { ToggleSwitch } from 'flowbite-react'
+import { useState } from 'react'
 export default function CheckInput({ name, modificationName }) {
-  const { handleModification } = useDesign()
+  const [isChecked, setIsChecked] = useState(false)
+  const { handleModification, setNewModification } = useDesign()
+
+  const handleChange = () => {
+    handleModification({ name: modificationName, value: !isChecked })
+    setNewModification(true)
+    setIsChecked(!isChecked)
+  }
+
   return (
-    <div className='relative mx-3'>
-      <label htmlFor='name'>{name}</label>
-      <input
-        type='checkbox'
-        name={name}
-        className='bg-gray-100 rounded-md p-2 mx-1'
-        onChange={(e) => handleModification({ name: modificationName, value: e.target.checked })}
-        required
-      />
-    </div>
+    <ToggleSwitch
+      className='mb-5'
+      checked={isChecked}
+      label={name}
+      onChange={handleChange}
+    />
   )
 }

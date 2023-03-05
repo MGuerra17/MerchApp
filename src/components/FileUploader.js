@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import useDesign from '../hooks/useDesign'
 
 export default function FileUploader() {
-  const { saveOriginalFile, savePublicId } = useDesign()
+  const { saveOriginalFile, savePublicId, saveDimensions } = useDesign()
   useEffect(() => {
     const dropzoneForm = new Dropzone('#uploadDesign', {
       uploadMultiple: false,
@@ -18,8 +18,10 @@ export default function FileUploader() {
     })
 
     dropzoneForm.on('success', (file, response) => {
-      savePublicId(response.public_id)
-      saveOriginalFile(response.secure_url)
+      const { public_id, secure_url, width, height } = response
+      saveDimensions({ width, height })
+      savePublicId(public_id)
+      saveOriginalFile(secure_url)
     })
 
     dropzoneForm.on('error', (file, response) => {
