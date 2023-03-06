@@ -6,10 +6,18 @@ export default function CheckInput({ name, modificationName, disabled }) {
   const { handleModification, setNewModification, modificationsList } = useDesign()
 
   useEffect(() => {
-    if (modificationsList[modificationName]) {
-      setIsChecked(modificationsList[modificationName])
+    if (modificationName === 'addShape') {
+      if (modificationsList[modificationName].shapePublicId) {
+        setIsChecked(true)
+      } else {
+        setIsChecked(false)
+      }
     } else {
-      setIsChecked(false)
+      if (modificationsList[modificationName]) {
+        setIsChecked(modificationsList[modificationName])
+      } else {
+        setIsChecked(false)
+      }
     }
   }, [modificationsList])
 

@@ -67,7 +67,6 @@ export default function useDesign() {
     const lastModifications = [...modificationsHistory]
     const lastModification = lastModifications.pop()
     delete allModifications[lastModification]
-    console.log(modificationsList, allModifications)
     applyModifications(allModifications)
     setModificationsList(allModifications)
     setModificationsHistory(lastModifications)
@@ -86,9 +85,13 @@ export default function useDesign() {
   }
 
   const applyModifications = async (modifications) => {
+    console.log(modifications)
     setLoading(true)
+    if (!modifications) {
+      setLoading(false)
+      return
+    }
     const newModifiedFile = imageModifications.createImage(window.localStorage.getItem('publicId'))
-
     if (Object.keys(modifications).length > 0) {
       if (Object.keys(modifications).includes('removeBg')) {
         console.log('removeBg')
@@ -97,12 +100,10 @@ export default function useDesign() {
       }
       for (const modification in modifications) {
         if (modification === 'removeBg') break
-        console.log(modification)
         const modificationFunction = imageModifications[modification]
         modificationFunction(newModifiedFile, modifications[modification])
       }
     }
-    console.log('hola')
     window.localStorage.setItem('modificationsList', JSON.stringify(modifications))
     console.log(newModifiedFile?.toURL())
     setModifiedFile(newModifiedFile?.toURL())
@@ -111,7 +112,12 @@ export default function useDesign() {
 
   const saveDesign = ({ name, publicId }) => {
     const newDesignList = [...designList]
-    newDesignList.push({ name, publicId })
+    const projectIndex = newDesignList.findIndex(x => x.name === name)
+    if (projectIndex !== -1) {
+      newDesignList[projectIndex] = { name, publicId }
+    } else {
+      newDesignList.push({ name, publicId })
+    }
     console.log(newDesignList)
     window.localStorage.setItem('designList', JSON.stringify(newDesignList))
     setDesignList(newDesignList)

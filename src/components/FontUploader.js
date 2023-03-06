@@ -14,7 +14,7 @@ export default function FontUploader() {
   useEffect(() => {
     const dropzoneForm = new Dropzone('#uploadFont', {
       uploadMultiple: false,
-      acceptedFiles: '.otf,.ttf,.fnt',
+      acceptedFiles: '.otf,.ttf',
       maxFiles: 1
     })
 

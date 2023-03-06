@@ -56,7 +56,7 @@ const adjustVibrance = (image, value) => image.adjust(vibrance().strength(value)
 
 // SHAPES
 
-const addShape = (originalImage, { shapeName, shapeDimensions }) => shapeName ? originalImage.reshape(cutByImage(image(shapeName).transformation(new Transformation().resize(scale().width(shapeDimensions.width).height(shapeDimensions.height))))) : originalImage
+const addShape = (originalImage, { shapePublicId, shapeDimensions }) => shapePublicId ? originalImage.reshape(cutByImage(image(shapePublicId).transformation(new Transformation().resize(scale().width(shapeDimensions.width).height(shapeDimensions.height))))) : originalImage
 
 // TEXT
 const addText = (image, { textContent, fontName, fontSize, angle, color }) => {

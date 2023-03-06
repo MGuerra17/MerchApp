@@ -22,6 +22,7 @@ export default function ShapeInput() {
     setShapeHeight(originalDimensions?.height)
   }, [originalDimensions])
 
+  console.log(activeShape)
   useEffect(() => {
     if (modificationsList.addShape) {
       const shapeConfig = modificationsList.addShape
@@ -36,7 +37,8 @@ export default function ShapeInput() {
     handleModification({
       name: 'addShape',
       value: {
-        shapeName: activeShape.publicId,
+        shapeName: activeShape.name,
+        shapePublicId: activeShape.publicId,
         shapeDimensions: { width: shapeWidth, height: shapeHeight }
       }
     })
@@ -45,7 +47,7 @@ export default function ShapeInput() {
   }
 
   const handleShapeChange = ({ name, publicId }) => {
-    if (activeShape.name === name || activeShape.name === publicId) {
+    if (activeShape.name === name) {
       setActiveShape({})
     } else {
       setActiveShape({ name, publicId })
@@ -75,7 +77,7 @@ export default function ShapeInput() {
         htmlFor='shapeName'
         value='Shape'
       />
-      <div className='flex w-72 mx-auto justify-between mt-4'>
+      <div className='flex w-72 mx-auto justify-between my-4'>
         {SHAPES.map(({ name, publicId }) => {
           const isActive = (name === activeShape.name) || (publicId === activeShape.name)
           return <ShapeOption key={name} name={name} image={name} active={isActive} selectHandler={() => handleShapeChange({ name, publicId })} />
