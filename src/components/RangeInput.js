@@ -1,10 +1,18 @@
 import { Label, RangeSlider } from 'flowbite-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useDesign from '@/hooks/useDesign'
 
-export default function RangeInput({ min, max, title, modificationName, icon, ...props }) {
+export default function RangeInput({ min, max, title, modificationName, icon, unit, ...props }) {
   const [value, setValue] = useState(0)
-  const { handleModification, setNewModification } = useDesign()
+  const { handleModification, setNewModification, modificationsList } = useDesign()
+
+  useEffect(() => {
+    if (modificationsList[modificationName]) {
+      setValue(modificationsList[modificationName])
+    } else {
+      setValue(0)
+    }
+  }, [modificationsList])
 
   const handleChange = (e) => {
     setNewModification(true)
@@ -29,12 +37,12 @@ export default function RangeInput({ min, max, title, modificationName, icon, ..
           sizing='sm'
           min={min}
           max={max}
-          value={value}
+          value={value || 0}
           onChange={handleChange}
           {...props}
         />
       </div>
-      <p className='text-white self-end px-3'>{value}</p>
+      <p className='text-white self-end px-3 w-14 whitespace-nowrap text-center'>{value}{unit}</p>
     </div>
   )
 }

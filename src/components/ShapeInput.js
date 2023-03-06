@@ -10,16 +10,27 @@ const SHAPES = [
   { name: 'Hexagon', publicId: 'i64v41879slh0i3tk8qr' }]
 
 export default function ShapeInput() {
-  const { originalDimensions, handleModification, setNewModification } = useDesign()
+  const { originalDimensions, handleModification, setNewModification, modificationsList } = useDesign()
   const [fullSize, setFullSize] = useState(true)
   const [shapeWidth, setShapeWidth] = useState('')
   const [shapeHeight, setShapeHeight] = useState('')
   const [activeShape, setActiveShape] = useState('')
+  const [someChange, setSomeChange] = useState(false)
 
   useEffect(() => {
     setShapeWidth(originalDimensions?.width)
     setShapeHeight(originalDimensions?.height)
   }, [originalDimensions])
+
+  useEffect(() => {
+    if (modificationsList.addShape) {
+      const shapeConfig = modificationsList.addShape
+      console.log(shapeConfig.shapeName)
+      setActiveShape({ name: shapeConfig.shapeName, publicId: shapeConfig.publicId })
+      setShapeWidth(shapeConfig.shapeDimensions.width)
+      setShapeHeight(shapeConfig.shapeDimensions.height)
+    }
+  }, [modificationsList])
 
   const handleSaveConfig = () => {
     handleModification({
@@ -30,12 +41,32 @@ export default function ShapeInput() {
       }
     })
     setNewModification(true)
+    setSomeChange(false)
+  }
+
+  const handleShapeChange = ({ name, publicId }) => {
+    if (activeShape.name === name || activeShape.name === publicId) {
+      setActiveShape({})
+    } else {
+      setActiveShape({ name, publicId })
+    }
+    setSomeChange(true)
   }
 
   const handleFullSize = (e) => {
     setFullSize(!fullSize)
     setShapeWidth(originalDimensions.width)
     setShapeHeight(originalDimensions.height)
+    setSomeChange(true)
+  }
+
+  const handleWidthChange = (e) => {
+    setShapeWidth(e.target.value)
+    setSomeChange(true)
+  }
+  const handleHeightChange = (e) => {
+    setShapeHeight(e.target.value)
+    setSomeChange(true)
   }
 
   return (
@@ -46,16 +77,18 @@ export default function ShapeInput() {
       />
       <div className='flex w-72 mx-auto justify-between mt-4'>
         {SHAPES.map(({ name, publicId }) => {
-          const isActive = name === activeShape.name
-          return <ShapeOption key={name} name={name} image={name} active={isActive} selectHandler={() => setActiveShape({ name, publicId })} />
+          const isActive = (name === activeShape.name) || (publicId === activeShape.name)
+          return <ShapeOption key={name} name={name} image={name} active={isActive} selectHandler={() => handleShapeChange({ name, publicId })} />
         })}
       </div>
-      <ToggleSwitch
-        className='my-8'
-        checked={fullSize}
-        label='Fit to image'
-        onChange={handleFullSize}
-      />
+      {activeShape.name && (
+        <ToggleSwitch
+          className='my-8'
+          checked={fullSize}
+          label='Fit to image'
+          onChange={handleFullSize}
+        />
+      )}
 
       <div className={`flex justify-center ${fullSize && 'hidden'}`}>
         <div className='mb-2 block'>
@@ -72,7 +105,7 @@ export default function ShapeInput() {
           value={shapeWidth || ''}
           disabled={fullSize}
           className='w-14'
-          onChange={(e) => setShapeWidth(e.target.value)}
+          onChange={handleWidthChange}
         />
         <div className='mb-2 block'>
           <Label
@@ -88,10 +121,11 @@ export default function ShapeInput() {
           value={shapeHeight || ''}
           disabled={fullSize}
           className='w-14'
-          onChange={(e) => setShapeHeight(e.target.value)}
+          onChange={handleHeightChange}
         />
       </div>
-      <Button className='mx-auto mt-5' onClick={handleSaveConfig}>Save configuration</Button>
+      {someChange && <Button className='mx-auto mt-5' onClick={handleSaveConfig}>Save configuration</Button>}
+
     </div>
   )
 }

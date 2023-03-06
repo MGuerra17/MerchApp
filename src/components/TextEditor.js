@@ -1,59 +1,151 @@
 import useDesign from '@/hooks/useDesign'
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
+import { Select, Label, TextInput, RangeSlider, Button } from 'flowbite-react'
+import dynamic from 'next/dynamic'
+import RotationSvg from '../../public/RotationSvg'
+const ChromePicker = dynamic(() => import('react-color').then((module) => module.ChromePicker), {
+  ssr: false
+})
 export default function TextEditor() {
   const [textContent, setTextContent] = useState('')
-  const [fontName, setFontName] = useState('')
+  const [fontName, setFontName] = useState('Arial')
   const [fontSize, setFontSize] = useState('')
-  const [color, setColor] = useState('')
+  const [color, setColor] = useState('#ffffff')
   const [angle, setAngle] = useState(0)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [someChange, setSomeChange] = useState(false)
 
-  const { handleModification, fonts } = useDesign()
+  const { handleModification, fonts, setNewModification, modificationsList } = useDesign()
 
-  const handleValueChange = () => {
+  useEffect(() => {
+    if (modificationsList.addText) {
+      const textConfig = modificationsList.addText
+      setTextContent(textConfig.textContent)
+      setFontName(textConfig.fontName)
+      setFontSize(textConfig.fontSize)
+      setAngle(textConfig.angle)
+      setColor(textConfig.color)
+    }
+  }, [modificationsList])
+
+  const handleSaveConfig = () => {
     handleModification({ name: 'addText', value: { textContent, fontName, fontSize, angle, color } })
+    setNewModification(true)
+    setSomeChange(false)
+  }
+
+  const handleFontNameChange = (e) => {
+    setFontName(e.target.value)
+    setSomeChange(true)
+  }
+
+  const handleFontSizeChange = (e) => {
+    setFontSize(e.target.value)
+    setSomeChange(true)
+  }
+
+  const handleTextContentChange = (e) => {
+    setTextContent(e.target.value)
+    setSomeChange(true)
+  }
+
+  const handleColorChange = (color) => {
+    setColor(color.hex)
+    setSomeChange(true)
+  }
+
+  const handleAngleChange = (e) => {
+    setAngle(e.target.value)
+    setSomeChange(true)
   }
 
   return (
-    <div className='mx-3 flex-col'>
-      <label htmlFor='name'>Texto</label>
+    <div className='flex-col'>
+      <p className='text-slate-200 text-sm font-bold mb-4'>Add text</p>
       <div className='flex'>
-        <select name='fontType' onChange={(e) => setFontName(e.target.value)}>
+        <Select
+          className='flex-1'
+          name='fontExtension' value={fontName} onChange={handleFontNameChange}
+        >
           {fonts.map((font) => <option key={font} value={font}>{font.split('.')[0]}</option>)}
-        </select>
-        <input
+          <option value='Arial'>Arial</option>
+          <option value='Helvetica'>Helvetica</option>
+          <option value='Times'>Times</option>
+          <option value='Verdana'>Verdana</option>
+          <option value='Georgia'>Georgia</option>
+          <option value='Impact'>Impact</option>
+          <option value='Roboto'>Roboto</option>
+          <option value='Lato'>Lato</option>
+          <option value='Monserrat'>Monserrat</option>
+          <option value='Raleway'>Raleway</option>
+        </Select>
+        <div className='flex mb-4 items-center'>
+          <div className='pl-4 pr-2'>
+            <Label
+              htmlFor='small'
+              value='Font size'
+            />
+          </div>
+          <TextInput
+            className='w-14'
+            id='small'
+            type='text'
+            sizing='md'
+            value={fontSize || ''}
+            onChange={handleFontSizeChange}
+          />
+        </div>
+      </div>
+      <div className='flex mb-2 w-full'>
+        <div className='mb-2 flex items-center'>
+          <Label
+            htmlFor='small'
+            value='Text'
+          />
+        </div>
+        <TextInput
+          className='flex-1 ml-5'
+          id='small'
           type='text'
-          className='bg-gray-100 rounded-md p-2 w-20 mx-1'
-          value={fontSize}
-          onChange={(e) => setFontSize(e.target.value)}
-          required
+          sizing='md'
+          value={textContent || ''}
+          onChange={handleTextContentChange}
         />
       </div>
-      <span>Contenido</span>
-      <input
-        type='text'
-        className='bg-gray-100 rounded-md p-2 w-40 mx-1'
-        value={textContent}
-        onChange={(e) => setTextContent(e.target.value)}
-        required
-      />
-      <input
-        type='text'
-        className='bg-gray-100 rounded-md p-2 w-20 mx-1'
-        value={color}
-        placeholder='Color'
-        onChange={(e) => setColor(e.target.value)}
-        required
-      />
-      <input
-        type='text'
-        className='bg-gray-100 rounded-md p-2 w-20 mx-1'
-        value={angle}
-        placeholder='Angulo'
-        onChange={(e) => setAngle(e.target.value)}
-        required
-      />
-      <button onClick={handleValueChange}>Guardar</button>
+      <div className='flex w-full'>
+        <div className='relative pt-2 flex items-center'>
+          <p className='text-slate-200 text-sm font-bold pb-2 pr-4'>Color</p>
+          <div className='w-10 h-10 bg-slate-700 rounded-lg p-2' onClick={() => setShowColorPicker(!showColorPicker)}>
+            <div style={{ backgroundColor: color }} className='w-full aspect-square rounded-sm' />
+          </div>
+          {showColorPicker && <ChromePicker className='z-10 absolute bottom-full' color={color} onChange={handleColorChange} disableAlpha />}
+        </div>
+        <div className='flex w-full mb-3'>
+          <div className='w-4 pt-7 mx-3 text-white'>
+            <RotationSvg />
+          </div>
+          <div className='flex-1'>
+            <div>
+              <Label
+                className=''
+                htmlFor='sm-range'
+                value='Rotation'
+              />
+            </div>
+            <RangeSlider
+              id='sm-range'
+              sizing='sm'
+              min={0}
+              max={360}
+              value={angle}
+              onChange={handleAngleChange}
+            />
+          </div>
+          <p className='text-white self-end px-3 w-14 whitespace-nowrap text-center'>{angle}°</p>
+        </div>
+
+      </div>
+      {someChange && <Button className='mx-auto mt-5' disabled={!someChange} onClick={handleSaveConfig}>Save configuration</Button>}
     </div>
   )
 }

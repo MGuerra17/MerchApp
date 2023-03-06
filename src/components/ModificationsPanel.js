@@ -1,8 +1,7 @@
-import { Accordion, Button } from 'flowbite-react'
+import { Accordion, Button, Spinner, Tooltip } from 'flowbite-react'
 import RangeInput from './RangeInput'
 import useDesign from '@/hooks/useDesign'
 import { useState } from 'react'
-import FullPageLoading from './FullPageLoading'
 import BrightnessSvg from '../../public/BrightnessSvg'
 import VibranceSvg from '../../public/VibranceSvg'
 import SaturationSvg from '../../public/SaturationSvg'
@@ -10,30 +9,66 @@ import ContrastSvg from '../../public/ContrastSvg'
 import CheckInput from './CheckInput'
 import BlurSvg from '../../public/BlurSvg'
 import ShapeInput from './ShapeInput'
+import TwoFieldsInput from './TwoFieldsInput'
+import RoundedInput from './RoundedInput'
+import FontUploader from './FontUploader'
+import TextEditor from './TextEditor'
+import RotationSvg from '../../public/RotationSvg'
+import UndoSvg from '../../public/UndoSvg'
+import DeleteSvg from '../../public/DeleteSvg'
 
 export default function ModificationsPanel() {
   const {
     modificationsList,
     applyModifications,
     newModification,
-    setNewModification
+    setNewModification,
+    projectName,
+    saveProjectName,
+    cleanContext
   } = useDesign()
-  const [loading, setLoading] = useState()
-  const handleApplyChanges = () => {
+  const [loading, setLoading] = useState(false)
+  const handleApplyChanges = async () => {
     setLoading(true)
     setNewModification(false)
-    applyModifications(modificationsList)
-    setTimeout(() => {
-      setLoading(false)
-    }, 800)
+    await applyModifications(modificationsList)
+    setLoading(false)
   }
 
   return (
-    <div className='pl-5 maxw'>
-      {loading && <FullPageLoading />}
-      <div className='flex items-center justify-between py-5'>
-        <h2 className=' font-bold text-lg text-white'>Editing Panel</h2>
-        <Button outline disabled={!newModification} onClick={handleApplyChanges}>Apply</Button>
+    <div className='pl-5 overflow-y-scroll h-9/10 pb-4'>
+      <div className='flex flex-col'>
+        <div className='flex items-center justify-between py-5'>
+          <h2 className=' font-bold text-lg text-white'>Editing Panel</h2>
+          <Button outline disabled={!newModification} onClick={handleApplyChanges}>
+            {loading
+              ? (
+                <div>
+                  <Spinner
+                    className='mr-3'
+                    size='sm'
+                    light
+                  />
+                  Loading...
+                </div>)
+              : 'Apply'}
+          </Button>
+        </div>
+        <div className='flex items-center justify-between mb-2'>
+          <div className='flex items-center justify-between w-20'>
+            <Tooltip content='Undo' placement='top'>
+              <button className='w-8 text-slate-400'>
+                <UndoSvg />
+              </button>
+            </Tooltip>
+            <Tooltip content='Delete' placement='top'>
+              <button className='w-8 text-slate-400' onClick={cleanContext}>
+                <DeleteSvg />
+              </button>
+            </Tooltip>
+          </div>
+          <input type='text' className='rounded-lg flex-1 ml-5  mr-2 text-white font-bold bg-transparent border-blue-700 active:border-none active:outline-none' placeholder='Your project name...' value={projectName || ''} onChange={(e) => saveProjectName(e.target.value)} />
+        </div>
       </div>
       <Accordion alwaysOpen>
         <Accordion.Panel>
@@ -52,14 +87,20 @@ export default function ModificationsPanel() {
             Background
           </Accordion.Title>
           <Accordion.Content>
-            <CheckInput name='Remove Background' modificationName='removeBg' />
+            <Tooltip content='Not currently available' placement='top'>
+              <CheckInput name='Remove Background' modificationName='removeBg' disabled />
+            </Tooltip>
           </Accordion.Content>
         </Accordion.Panel>
         <Accordion.Panel>
           <Accordion.Title className='focus:ring-0'>
             Transformaciones
           </Accordion.Title>
-          <Accordion.Content />
+          <Accordion.Content>
+            <TwoFieldsInput name='Redimensionar' firstValueName='width' secondValueName='height' modificationName='resizeImage' />
+            <RangeInput title='Rotation' min={0} max={360} modificationName='rotateImage' unit='°' icon={<RotationSvg />} />
+            <RoundedInput />
+          </Accordion.Content>
         </Accordion.Panel>
         <Accordion.Panel>
           <Accordion.Title className='focus:ring-0'>
@@ -84,34 +125,8 @@ export default function ModificationsPanel() {
             Text
           </Accordion.Title>
           <Accordion.Content>
-            <p className='mb-2 text-gray-500 dark:text-gray-400'>
-              The main difference is that the core components from Flowbite are open source under the MIT license, whereas Tailwind UI is a paid product. Another difference is that Flowbite relies on smaller and standalone components, whereas Tailwind UI offers sections of pages.
-            </p>
-            <p className='mb-2 text-gray-500 dark:text-gray-400'>
-              However, we actually recommend using both Flowbite, Flowbite Pro, and even Tailwind UI as there is no technical reason stopping you from using the best of two worlds.
-            </p>
-            <p className='mb-2 text-gray-500 dark:text-gray-400'>
-              Learn more about these technologies:
-            </p>
-            <ul className='list-disc pl-5 text-gray-500 dark:text-gray-400'>
-              <li>
-                <a
-                  href='https://flowbite.com/pro/'
-                  className='text-blue-600 hover:underline dark:text-blue-500'
-                >
-                  Flowbite Pro
-                </a>
-              </li>
-              <li>
-                <a
-                  href='https://tailwindui.com/'
-                  rel='nofollow'
-                  className='text-blue-600 hover:underline dark:text-blue-500'
-                >
-                  Tailwind UI
-                </a>
-              </li>
-            </ul>
+            <FontUploader />
+            <TextEditor />
           </Accordion.Content>
         </Accordion.Panel>
       </Accordion>

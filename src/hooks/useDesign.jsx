@@ -1,9 +1,10 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { DesignContext } from '@/contexts/design'
 import imageModifications from '@/helpers/imageModifications'
 
 export default function useDesign() {
   const {
+    projectName,
     originalFile,
     setOriginalFile,
     publicId,
@@ -15,20 +16,25 @@ export default function useDesign() {
     setModifiedFile,
     setPublicId,
     setModificationsList,
+    designList,
+    setProjectName,
     setFonts,
     setOriginalDimensions,
     modificationsHistory,
     setModificationsHistory,
     setNewModification,
+    setDesignList,
     loading,
-    setLoading
+    setLoading,
+    cleanContext
   } = useContext(DesignContext)
 
-  useEffect(() => {
-    console.log(modificationsList)
-  }, [modificationsList])
-
   const [showOriginal, setShowOriginal] = useState(false)
+
+  const saveProjectName = (name) => {
+    window.localStorage.setItem('projectName', name)
+    setProjectName(name)
+  }
 
   const saveOriginalFile = (data) => {
     window.localStorage.setItem('originalFile', data)
@@ -79,24 +85,40 @@ export default function useDesign() {
     setModificationsList({ ...modificationsList, [name]: value })
   }
 
-  const applyModifications = (modifications) => {
+  const applyModifications = async (modifications) => {
     setLoading(true)
-    console.log('cargango..')
     const newModifiedFile = imageModifications.createImage(window.localStorage.getItem('publicId'))
 
     if (Object.keys(modifications).length > 0) {
+      if (Object.keys(modifications).includes('removeBg')) {
+        console.log('removeBg')
+        const modificationFunction = imageModifications.removeBg
+        modificationFunction(newModifiedFile, true)
+      }
       for (const modification in modifications) {
+        if (modification === 'removeBg') break
+        console.log(modification)
         const modificationFunction = imageModifications[modification]
         modificationFunction(newModifiedFile, modifications[modification])
       }
     }
-    console.log({ modifications })
+    console.log('hola')
     window.localStorage.setItem('modificationsList', JSON.stringify(modifications))
     console.log(newModifiedFile?.toURL())
+    setModifiedFile(newModifiedFile?.toURL())
     setLoading(false)
   }
 
+  const saveDesign = ({ name, publicId }) => {
+    const newDesignList = [...designList]
+    newDesignList.push({ name, publicId })
+    console.log(newDesignList)
+    window.localStorage.setItem('designList', JSON.stringify(newDesignList))
+    setDesignList(newDesignList)
+  }
+
   return {
+    projectName,
     originalFile,
     fonts,
     saveOriginalFile,
@@ -106,6 +128,7 @@ export default function useDesign() {
     originalDimensions,
     modificationsList,
     newModification,
+    setProjectName,
     savePublicId,
     setModificationsList,
     setPublicId,
@@ -119,6 +142,10 @@ export default function useDesign() {
     loading,
     setLoading,
     showOriginal,
-    setShowOriginal
+    setShowOriginal,
+    saveDesign,
+    saveProjectName,
+    designList,
+    cleanContext
   }
 }

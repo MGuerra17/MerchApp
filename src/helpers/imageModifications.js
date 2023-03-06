@@ -30,7 +30,7 @@ const rotateImage = (image, value) => image.rotate(byAngle(value))
 
 const roundCorners = (image, value) => image.roundCorners(byRadius(value))
 
-const roundCircle = (image) => image.roundCorners(max())
+const roundCircle = (image, value) => value ? image.roundCorners(max()) : image
 
 // BACKGROUND
 
@@ -56,7 +56,7 @@ const adjustVibrance = (image, value) => image.adjust(vibrance().strength(value)
 
 // SHAPES
 
-const addShape = (originalImage, { shapeName, shapeDimensions }) => originalImage.reshape(cutByImage(image(shapeName).transformation(new Transformation().resize(scale().width(shapeDimensions.width).height(shapeDimensions.height)))))
+const addShape = (originalImage, { shapeName, shapeDimensions }) => shapeName ? originalImage.reshape(cutByImage(image(shapeName).transformation(new Transformation().resize(scale().width(shapeDimensions.width).height(shapeDimensions.height))))) : originalImage
 
 // TEXT
 const addText = (image, { textContent, fontName, fontSize, angle, color }) => {
