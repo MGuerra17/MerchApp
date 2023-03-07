@@ -74,13 +74,13 @@ export default function ModificationsPanel() {
       <Accordion alwaysOpen>
         <Accordion.Panel>
           <Accordion.Title className='focus:ring-0'>
-            Ajustes
+            Settings
           </Accordion.Title>
           <Accordion.Content>
-            <RangeInput title='Brillo' min={-100} max={100} modificationName='adjustBrightness' icon={<BrightnessSvg />} />
-            <RangeInput title='Saturacion' min={-100} max={100} modificationName='adjustSaturation' icon={<SaturationSvg />} />
-            <RangeInput title='Contraste' min={-100} max={100} modificationName='adjustContrast' icon={<ContrastSvg />} />
-            <RangeInput title='Vibracion' min={-100} max={100} modificationName='adjustVibrance' icon={<VibranceSvg />} />
+            <RangeInput title='Brightness' min={-100} max={100} modificationName='adjustBrightness' icon={<BrightnessSvg />} />
+            <RangeInput title='Saturation' min={-100} max={100} modificationName='adjustSaturation' icon={<SaturationSvg />} />
+            <RangeInput title='Contrast' min={-100} max={100} modificationName='adjustContrast' icon={<ContrastSvg />} />
+            <RangeInput title='Vibrance' min={-100} max={100} modificationName='adjustVibrance' icon={<VibranceSvg />} />
           </Accordion.Content>
         </Accordion.Panel>
         <Accordion.Panel>
@@ -95,10 +95,10 @@ export default function ModificationsPanel() {
         </Accordion.Panel>
         <Accordion.Panel>
           <Accordion.Title className='focus:ring-0'>
-            Transformaciones
+            Transformations
           </Accordion.Title>
           <Accordion.Content>
-            <TwoFieldsInput name='Redimensionar' firstValueName='width' secondValueName='height' modificationName='resizeImage' />
+            <TwoFieldsInput name='Resize' firstValueName='width' secondValueName='height' modificationName='resizeImage' />
             <RangeInput title='Rotation' min={0} max={360} modificationName='rotateImage' unit='°' icon={<RotationSvg />} />
             <RoundedInput />
           </Accordion.Content>
@@ -113,7 +113,7 @@ export default function ModificationsPanel() {
         </Accordion.Panel>
         <Accordion.Panel>
           <Accordion.Title className='focus:ring-0'>
-            Filtros
+            Filters
           </Accordion.Title>
           <Accordion.Content>
             <CheckInput name='Gray scale' modificationName='grayScaleFilter' />
