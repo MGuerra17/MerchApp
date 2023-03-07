@@ -12,7 +12,7 @@ export default function Home() {
       <Navbar />
       <main className='w-full px-8 md:px-36 home-bg'>
         <div className='w-full text-center mt-20 font-bold text-3xl md:text-5xl animate-gradient-text capitalize'>Unleash your creativity with our unique design app</div>
-        <h3 className='w-96 mx-auto text-center mt-10 text-slate-400 text-lg md:text-xl'>Our application offers you tools so you can create exclusive and original designs, with no limits to your creativity!</h3>
+        <h3 className='w-4/5 md:w-2/5 mx-auto text-center mt-10 text-slate-400 text-sm md:text-xl'>Our application offers you tools so you can create exclusive and original designs, with no limits to your creativity!</h3>
         <div className='w-full flex my-10 justify-center gap-8'>
           <a href='/generateMerch' className=''>
             <button type='button' className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>Get started</button>
@@ -24,9 +24,9 @@ export default function Home() {
 
         <p className='w-full text-4xl my-20 text-white font-bold text-center'>FEATURES</p>
         <div className='flex flex-col gap-14 md:flex-row w-full justify-center my-12'>
-          <div className='m-2'>
+          <div className='m-2 flex items-center justify-center'>
             <div className='component flex max-w-xs pt-16 h-96'>
-              <div className='w-full px-8 pb-8 shadow-lg rounded-lg bg-slate-800 text-center relative'>
+              <div className='w-full px-1 md:px-8 pb-14 shadow-lg rounded-lg bg-slate-800 text-center relative md:min-h-[350px]'>
                 <div className='absolute top-0 left-0 right-0 '>
                   <div className='inline-block bg-indigo-200 rounded-full p-8 transform -translate-y-1/2'>
                     <svg className='w-6 text-blue-700' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
@@ -38,13 +38,13 @@ export default function Home() {
                 </div>
                 <div className='mt-20 uppercase text-blue-700 font-bold'>Your design, your rules</div>
                 <div className='mt-3 text-sm text-slate-400'>With our unique design app, you can upload your own files and turn them into unique designs in a matter of seconds. You can also upload your own fonts in OTF or TTF format and use it to make amazing designs.</div>
-                <div className='absolute bottom-0 -mx-8 mb-5 w-full'><a href='/generateMerch' className='uppercase font-bold border-b-2 text-blue-500 border-blue-200 hover:border-blue-500 hover:text-blue-600'>Try it</a></div>
+                <div className='absolute bottom-0 mx-auto mb-5 w-full'><a href='/generateMerch' className='uppercase font-bold border-b-2 text-blue-500 border-blue-200 hover:border-blue-500 hover:text-blue-600'>Try it</a></div>
               </div>
             </div>
           </div>
-          <div className='m-2'>
-            <div className='component flex max-w-xs pt-16 h-96'>
-              <div className='w-full px-8 pb-8 shadow-lg rounded-lg bg-slate-800 text-center relative'>
+          <div className='m-2 flex items-center justify-center'>
+            <div className='component flex max-w-xs pt-16'>
+              <div className='w-full px-1 md:px-8 pb-14 shadow-lg rounded-lg bg-slate-800 text-center relative md:min-h-[350px]'>
                 <div className='absolute top-0 left-0 right-0 '>
                   <div className='inline-block bg-indigo-200 rounded-full p-8 transform -translate-y-1/2'>
                     <svg className='w-6 text-blue-700' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
@@ -56,13 +56,13 @@ export default function Home() {
                 </div>
                 <div className='mt-20 uppercase text-blue-700 font-bold'>Create using AI</div>
                 <div className='mt-3 text-sm text-slate-400'>Our unique design app combines human creativity with the power of artificial intelligence so you can create amazing designs in seconds. Creating beautiful designs has never been so easy.</div>
-                <div className='absolute bottom-0 -mx-8 mb-5 w-full'><a href='/generateMerch/GenerateDesign' className='uppercase font-bold border-b-2 text-blue-500 border-blue-200 hover:border-blue-500 hover:text-blue-600'>Try it</a></div>
+                <div className='absolute bottom-0 mx-auto mb-5 w-full'><a href='/generateMerch/GenerateDesign' className='uppercase font-bold border-b-2 text-blue-500 border-blue-200 hover:border-blue-500 hover:text-blue-600'>Try it</a></div>
               </div>
             </div>
           </div>
-          <div className='m-2'>
+          <div className='m-2 flex items-center justify-center'>
             <div className='component flex max-w-xs pt-16 h-96'>
-              <div className='w-full px-8 pb-8 shadow-lg rounded-lg bg-slate-800 text-center relative'>
+              <div className='w-full px-1 md:px-8 pb-14 shadow-lg rounded-lg bg-slate-800 text-center relative md:min-h-[350px]'>
                 <div className='absolute top-0 left-0 right-0 '>
                   <div className='inline-block bg-indigo-200 rounded-full p-8 transform -translate-y-1/2'>
                     <svg className='w-6 text-blue-700' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
@@ -74,7 +74,7 @@ export default function Home() {
                 </div>
                 <div className='mt-20 uppercase text-blue-700 font-bold'>Save your work</div>
                 <div className='mt-3 text-sm text-slate-400'>Our application allows you to save the information of your current edition so that it is not lost when you close the project. In addition, at the end of the edition the design will be saved automatically so that you can view the collection later</div>
-                <div className='absolute bottom-0 -mx-8 mb-5 w-full'><a href='/Designs' className='uppercase font-bold border-b-2 text-blue-500 border-blue-200 hover:border-blue-500 hover:text-blue-600'>Try it</a></div>
+                <div className='absolute bottom-0 mx-auto mb-5 w-full'><a href='/Designs' className='uppercase font-bold border-b-2 text-blue-500 border-blue-200 hover:border-blue-500 hover:text-blue-600'>Try it</a></div>
               </div>
             </div>
           </div>

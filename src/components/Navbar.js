@@ -4,8 +4,8 @@ export default function Navbar() {
     <nav className='border-gray-200 px-2 sm:px-4 py-2.5 rounded-b-lg'>
       <div className='container flex flex-wrap items-center justify-between mx-auto'>
         <a href='/' className='flex items-center'>
-          <span className='self-center text-2xl font-bold whitespace-nowrap dark:text-white flex items-center'>
-            <svg className='w-12 text-blue-700 mx-3' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+          <span className='self-center text-md md:text-2xl font-bold whitespace-nowrap dark:text-white flex items-center'>
+            <svg className='w-7 md:w-12 text-blue-700 mx-1 md:mx-3' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
               <path d='M15 15.5C15 19.09 12.09 22 8.5 22C4.91 22 2 19.09 2 15.5C2 11.91 4.91 9 8.5 9C8.67 9 8.84999 9.01 9.01999 9.02C12.19 9.27 14.73 11.81 14.98 14.98C14.99 15.15 15 15.33 15 15.5Z' fill='currentColor' />
               <path opacity='0.4' d='M22 8.5C22 12.09 19.09 15 15.5 15C15.33 15 15.15 14.99 14.98 14.98C14.73 11.81 12.19 9.27 9.01999 9.02C9.00999 8.85 9 8.67 9 8.5C9 4.91 11.91 2 15.5 2C19.09 2 22 4.91 22 8.5Z' fill='currentColor' />
               <path d='M5.59 2H3C2.45 2 2 2.45 2 3V5.59C2 6.48 3.07999 6.93 3.70999 6.3L6.29999 3.71001C6.91999 3.08001 6.48 2 5.59 2Z' fill='currentColor' />
