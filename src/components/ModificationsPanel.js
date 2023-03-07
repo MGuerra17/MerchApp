@@ -25,7 +25,8 @@ export default function ModificationsPanel() {
     setNewModification,
     projectName,
     saveProjectName,
-    cleanContext
+    cleanContext,
+    handleUndo
   } = useDesign()
   const [loading, setLoading] = useState(false)
   const handleApplyChanges = async () => {
@@ -57,7 +58,7 @@ export default function ModificationsPanel() {
         <div className='flex items-center justify-between mb-2'>
           <div className='flex items-center justify-between w-20'>
             <Tooltip content='Undo' placement='top'>
-              <button className='w-8 text-slate-400'>
+              <button className='w-8 text-slate-400' onClick={handleUndo}>
                 <UndoSvg />
               </button>
             </Tooltip>

@@ -3,8 +3,16 @@ export default function Navbar() {
 
     <nav className='border-gray-200 px-2 sm:px-4 py-2.5 rounded-b-lg'>
       <div className='container flex flex-wrap items-center justify-between mx-auto'>
-        <a href='https://flowbite.com/' className='flex items-center'>
-          <span className='self-center text-2xl font-semibold whitespace-nowrap dark:text-white'>Merch<span className='text-blue-700 text-sm'>App</span></span>
+        <a href='/' className='flex items-center'>
+          <span className='self-center text-2xl font-bold whitespace-nowrap dark:text-white flex items-center'>
+            <svg className='w-12 text-blue-700 mx-3' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              <path d='M15 15.5C15 19.09 12.09 22 8.5 22C4.91 22 2 19.09 2 15.5C2 11.91 4.91 9 8.5 9C8.67 9 8.84999 9.01 9.01999 9.02C12.19 9.27 14.73 11.81 14.98 14.98C14.99 15.15 15 15.33 15 15.5Z' fill='currentColor' />
+              <path opacity='0.4' d='M22 8.5C22 12.09 19.09 15 15.5 15C15.33 15 15.15 14.99 14.98 14.98C14.73 11.81 12.19 9.27 9.01999 9.02C9.00999 8.85 9 8.67 9 8.5C9 4.91 11.91 2 15.5 2C19.09 2 22 4.91 22 8.5Z' fill='currentColor' />
+              <path d='M5.59 2H3C2.45 2 2 2.45 2 3V5.59C2 6.48 3.07999 6.93 3.70999 6.3L6.29999 3.71001C6.91999 3.08001 6.48 2 5.59 2Z' fill='currentColor' />
+              <path d='M18.4097 22H20.9997C21.5497 22 21.9997 21.55 21.9997 21V18.41C21.9997 17.52 20.9197 17.07 20.2897 17.7L17.6997 20.29C17.0797 20.92 17.5197 22 18.4097 22Z' fill='currentColor' />
+            </svg>
+            Merch<span className='text-blue-700'>App</span>
+          </span>
         </a>
         <div className='flex md:order-2'>
           <a href='/generateMerch'>
@@ -18,10 +26,10 @@ export default function Navbar() {
         <div className='items-center justify-between hidden w-full md:flex md:w-auto md:order-1' id='navbar-cta'>
           <ul className='flex flex-col p-4 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 '>
             <li>
-              <a href='/' className='block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white' aria-current='page'>Home</a>
+              <a href='/' className='block py-2 pl-3 pr-4 hover:text-white text-gray-400 bg-blue-700 rounded md:bg-transparent md:p-0' aria-current='page'>Home</a>
             </li>
             <li>
-              <a href='/Designs' className='block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'>Designs</a>
+              <a href='/Designs' className='block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:hover:text-white text-gray-400 dark:hover:bg-gray-700 md:dark:hover:bg-transparent dark:border-gray-700'>Designs</a>
             </li>
           </ul>
         </div>

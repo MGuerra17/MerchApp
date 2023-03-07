@@ -68,25 +68,6 @@ export default function TwoFieldsInput({ name, firstValueName, secondValueName, 
           />
         </div>
       </div>
-      {/* <label htmlFor='name'>{name}</label>
-      <input
-        type='text'
-        name={name}
-        className='bg-gray-100 rounded-md p-2 w-20 mx-1'
-        value={firstValue}
-        onChange={(e) => handleValueChange({ name: firstValueName, value: e.target.value })}
-        required
-      />
-      <span>{firstValueName}</span> */}
-      {/* <input
-        type='text'
-        name={name}
-        className='bg-gray-100 rounded-md p-2 w-20 mx-1'
-        value={secondValue}
-        onChange={(e) => handleValueChange({ name: secondValueName, value: e.target.value })}
-        required
-      /> */}
-      {/* <span>{secondValueName}</span> */}
     </div>
   )
 }

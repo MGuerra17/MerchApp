@@ -23,7 +23,7 @@ export default function SelectSource() {
         </div>
         <div className='-mt-20 flex-col'>
           <h1 className='mb-20 text-2xl font-bold font dark:text-white text-center'>Select source</h1>
-          <div className='flex gap-5'>
+          <div className='flex gap-5 flex-wrap w-full items-center justify-center'>
             <LinkCard
               title='Create Design using IA'
               description='If you dont have your design already'

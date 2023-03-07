@@ -59,8 +59,7 @@ export default function EditFileLayout(props) {
       }
     }
     const response = await uploadDesign(modifiedFile)
-    console.log(response)
-    saveDesign({ name: projectName, publicId: response.public_id })
+    saveDesign({ name: projectName, publicId: response.public_id, date: new Date().toISOString() })
     const url = `/ShowResults/${response.public_id}`
     setTimeout(() => {
       router.push(url)

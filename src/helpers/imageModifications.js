@@ -8,6 +8,7 @@ import { byAngle } from '@cloudinary/url-gen/actions/rotate'
 import { max, byRadius } from '@cloudinary/url-gen/actions/roundCorners'
 import { brightness, saturation, contrast, vibrance } from '@cloudinary/url-gen/actions/adjust'
 import { cutByImage } from '@cloudinary/url-gen/actions/reshape'
+import { Position } from '@cloudinary/url-gen/qualifiers'
 // import { source } from '@cloudinary/url-gen/actions/overlay'
 // import { text } from '@cloudinary/url-gen/qualifiers/source'
 
@@ -59,9 +60,9 @@ const adjustVibrance = (image, value) => image.adjust(vibrance().strength(value)
 const addShape = (originalImage, { shapePublicId, shapeDimensions }) => shapePublicId ? originalImage.reshape(cutByImage(image(shapePublicId).transformation(new Transformation().resize(scale().width(shapeDimensions.width).height(shapeDimensions.height))))) : originalImage
 
 // TEXT
-const addText = (image, { textContent, fontName, fontSize, angle, color }) => {
+const addText = (image, { textContent, fontName, fontSize, angle, color, xPosition, yPosition }) => {
   const textConfig = new TextStyle(fontName, fontSize)
-  return image.overlay(source(text(textContent, textConfig).textColor(color).transformation(new Transformation().rotate(byAngle(angle)))))
+  return textContent ? image.overlay(source(text(textContent, textConfig).textColor(color).transformation(new Transformation().rotate(byAngle(angle)))).position(new Position().offsetX(xPosition || 0).offsetY(yPosition || 0))) : image
 }
 
 export default {

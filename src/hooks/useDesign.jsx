@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { DesignContext } from '@/contexts/design'
 import imageModifications from '@/helpers/imageModifications'
 
@@ -28,6 +28,10 @@ export default function useDesign() {
     setLoading,
     cleanContext
   } = useContext(DesignContext)
+
+  useEffect(() => {
+    console.log(modificationsHistory)
+  }, [modificationsHistory])
 
   const [showOriginal, setShowOriginal] = useState(false)
 
@@ -80,12 +84,10 @@ export default function useDesign() {
       console.log(newHistory)
       setModificationsHistory(newHistory)
     }
-    console.log('no')
     setModificationsList({ ...modificationsList, [name]: value })
   }
 
   const applyModifications = async (modifications) => {
-    console.log(modifications)
     setLoading(true)
     if (!modifications) {
       setLoading(false)
@@ -105,20 +107,18 @@ export default function useDesign() {
       }
     }
     window.localStorage.setItem('modificationsList', JSON.stringify(modifications))
-    console.log(newModifiedFile?.toURL())
     setModifiedFile(newModifiedFile?.toURL())
     setLoading(false)
   }
 
-  const saveDesign = ({ name, publicId }) => {
+  const saveDesign = ({ name, publicId, date }) => {
     const newDesignList = [...designList]
     const projectIndex = newDesignList.findIndex(x => x.name === name)
     if (projectIndex !== -1) {
-      newDesignList[projectIndex] = { name, publicId }
+      newDesignList[projectIndex] = { name, publicId, date }
     } else {
-      newDesignList.push({ name, publicId })
+      newDesignList.push({ name, publicId, date })
     }
-    console.log(newDesignList)
     window.localStorage.setItem('designList', JSON.stringify(newDesignList))
     setDesignList(newDesignList)
   }
