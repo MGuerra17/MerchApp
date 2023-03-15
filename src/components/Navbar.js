@@ -29,7 +29,7 @@ export default function Navbar() {
               <a href='/' className='block py-2 pl-3 pr-4 hover:text-white text-gray-400 bg-blue-700 rounded md:bg-transparent md:p-0' aria-current='page'>Home</a>
             </li>
             <li>
-              <a href='/Designs' className='block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:hover:text-white text-gray-400 dark:hover:bg-gray-700 md:dark:hover:bg-transparent dark:border-gray-700'>Designs</a>
+              <a href='/Projects' className='block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:hover:text-white text-gray-400 dark:hover:bg-gray-700 md:dark:hover:bg-transparent dark:border-gray-700'>Projects</a>
             </li>
           </ul>
         </div>

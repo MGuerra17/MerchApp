@@ -1,23 +1,26 @@
+import { useProjectsContext } from '@/contexts/projects'
 import { Label, RangeSlider } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import useDesign from '@/hooks/useDesign'
 
-export default function RangeInput({ min, max, title, modificationName, icon, unit, ...props }) {
+export default function RangeInput({ min, max, title, modificationName, modificationHandler, icon, unit, ...props }) {
+  const { state } = useProjectsContext()
+  const { modifications } = state.currentProject
   const [value, setValue] = useState(0)
-  const { handleModification, setNewModification, modificationsList } = useDesign()
 
   useEffect(() => {
-    if (modificationsList[modificationName]) {
-      setValue(modificationsList[modificationName])
+    const newModificationsList = [...modifications]
+    newModificationsList.reverse()
+    const currentModification = newModificationsList.find(modification => modification.name === modificationName)
+    if (currentModification) {
+      setValue(currentModification.value)
     } else {
       setValue(0)
     }
-  }, [modificationsList])
+  }, [state])
 
   const handleChange = (e) => {
-    setNewModification(true)
     setValue(e.target.value)
-    handleModification({ name: modificationName, value: e.target.value })
+    modificationHandler({ name: modificationName, value: e.target.value })
   }
   return (
     <div className='flex mb-3'>

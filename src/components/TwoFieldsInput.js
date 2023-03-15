@@ -1,28 +1,36 @@
-import useDesign from '@/hooks/useDesign'
 import { useEffect, useState } from 'react'
 import { Label, TextInput } from 'flowbite-react'
+import { useProjectsContext } from '@/contexts/projects'
 
-export default function TwoFieldsInput({ name, firstValueName, secondValueName, modificationName }) {
+export default function TwoFieldsInput({ name, firstValueName, secondValueName, modificationName, modificationHandler }) {
   const [firstValue, setFirstValue] = useState(0)
   const [secondValue, setSecondValue] = useState(0)
-  const { handleModification, setNewModification, originalDimensions } = useDesign()
+  const { state } = useProjectsContext()
+  const { modifications, originalImage } = state.currentProject
+  const { dimensions } = originalImage
 
   useEffect(() => {
-    if (originalDimensions && Object.keys(originalDimensions)?.length > 0) {
-      setFirstValue(originalDimensions?.width)
-      setSecondValue(originalDimensions?.height)
+    const newModificationsList = [...modifications]
+    newModificationsList.reverse()
+    const currentModification = newModificationsList.find(modification => modification.name === modificationName)
+    if (currentModification) {
+      const { width, height } = currentModification.value
+      setFirstValue(width || dimensions?.width || 0)
+      setSecondValue(height || dimensions?.height || 0)
+    } else {
+      setFirstValue(dimensions?.width || 0)
+      setSecondValue(dimensions?.height || 0)
     }
-  }, [originalDimensions])
+  }, [])
 
   const handleValueChange = ({ name, value }) => {
-    setNewModification(true)
     if (name === firstValueName) {
-      handleModification({ name: modificationName, value: { [firstValueName]: value, [secondValueName]: secondValue } })
       setFirstValue(value)
+      modificationHandler({ name: modificationName, value: { [firstValueName]: value, [secondValueName]: secondValue } })
     }
     if (name === secondValueName) {
-      handleModification({ name: modificationName, value: { [firstValueName]: firstValue, [secondValueName]: value } })
       setSecondValue(value)
+      modificationHandler({ name: modificationName, value: { [firstValueName]: firstValue, [secondValueName]: value } })
     }
   }
 

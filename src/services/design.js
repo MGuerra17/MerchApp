@@ -4,7 +4,6 @@ export async function createDesign(prompt) {
       method: 'POST',
       body: JSON.stringify({ prompt })
     })
-    console.log(res)
     const data = await res.json()
     return data
   } catch (error) {

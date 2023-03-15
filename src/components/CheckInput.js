@@ -1,30 +1,26 @@
-import useDesign from '@/hooks/useDesign'
 import { ToggleSwitch } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-export default function CheckInput({ name, modificationName, disabled }) {
+import { useProjectsContext } from '@/contexts/projects'
+
+export default function CheckInput({ name, modificationName, modificationHandler, disabled }) {
   const [isChecked, setIsChecked] = useState(false)
-  const { handleModification, setNewModification, modificationsList } = useDesign()
+  const { state } = useProjectsContext()
+  const { modifications } = state.currentProject
 
   useEffect(() => {
-    if (modificationName === 'addShape') {
-      if (modificationsList[modificationName].shapePublicId) {
-        setIsChecked(true)
-      } else {
-        setIsChecked(false)
-      }
+    const newModificationsList = [...modifications]
+    newModificationsList.reverse()
+    const currentModification = newModificationsList.find(modification => modification.name === modificationName)
+    if (currentModification?.value) {
+      setIsChecked(true)
     } else {
-      if (modificationsList[modificationName]) {
-        setIsChecked(modificationsList[modificationName])
-      } else {
-        setIsChecked(false)
-      }
+      setIsChecked(false)
     }
-  }, [modificationsList])
+  }, [state])
 
   const handleChange = () => {
-    handleModification({ name: modificationName, value: !isChecked })
-    setNewModification(true)
     setIsChecked(!isChecked)
+    modificationHandler({ name: modificationName, value: !isChecked })
   }
 
   return (

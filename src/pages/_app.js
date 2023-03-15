@@ -1,10 +1,10 @@
 import '@/styles/globals.css'
-import { DesignProvider } from '@/contexts/design'
+import { ProjectsProvider } from '@/contexts/projects'
 
 export default function App({ Component, pageProps }) {
   return (
-    <DesignProvider>
+    <ProjectsProvider>
       <Component {...pageProps} />
-    </DesignProvider>
+    </ProjectsProvider>
   )
 }

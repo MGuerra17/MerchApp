@@ -1,7 +1,5 @@
 import Navbar from '@/components/Navbar'
-import useDesign from '@/hooks/useDesign'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 
 const TSHIRT_LIST = [
   {
@@ -177,10 +175,6 @@ const BOOK_LIST = [
 export default function ShowResults() {
   const router = useRouter()
   const { designPublicId } = router.query
-  const { cleanContext } = useDesign()
-  useEffect(() => {
-    cleanContext()
-  }, [])
 
   return (
     <>

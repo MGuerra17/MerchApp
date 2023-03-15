@@ -1,75 +1,54 @@
-import useDesign from '@/hooks/useDesign'
 import { useEffect, useState } from 'react'
-import { Select, Label, TextInput, RangeSlider, Button } from 'flowbite-react'
+import { Select, Label, TextInput, RangeSlider } from 'flowbite-react'
 import dynamic from 'next/dynamic'
 import RotationSvg from '../../public/RotationSvg'
+import { useProjectsContext } from '@/contexts/projects'
 const ChromePicker = dynamic(() => import('react-color').then((module) => module.ChromePicker), {
   ssr: false
 })
-export default function TextEditor() {
+export default function TextEditor({ modificationHandler }) {
+  const { state } = useProjectsContext()
+  const { fonts, currentProject } = state
+  const { modifications } = currentProject
   const [textContent, setTextContent] = useState('')
-  const [fontName, setFontName] = useState('Arial')
-  const [fontSize, setFontSize] = useState('')
+  const [fontName, setFontName] = useState(fonts[0]?.publicId || 'Arial')
+  const [fontSize, setFontSize] = useState(12)
   const [color, setColor] = useState('#ffffff')
   const [angle, setAngle] = useState(0)
-  const [xPosition, setXPosition] = useState('')
-  const [yPosition, setYPosition] = useState('')
+  const [xPosition, setXPosition] = useState(0)
+  const [yPosition, setYPosition] = useState(0)
   const [showColorPicker, setShowColorPicker] = useState(false)
-  const [someChange, setSomeChange] = useState(false)
-
-  const { handleModification, fonts, setNewModification, modificationsList } = useDesign()
 
   useEffect(() => {
-    if (modificationsList.addText) {
-      const textConfig = modificationsList.addText
+    const newModificationsList = [...modifications]
+    newModificationsList.reverse()
+    const currentModification = newModificationsList.find(modification => modification.name === 'addText')
+
+    if (currentModification) {
+      const textConfig = currentModification.value
       setTextContent(textConfig.textContent)
       setFontName(textConfig.fontName)
       setFontSize(textConfig.fontSize)
       setAngle(textConfig.angle)
       setColor(textConfig.color)
+      setXPosition(textConfig.xPosition)
+      setYPosition(textConfig.yPosition)
+    } else {
+      setTextContent('')
+      setFontName(fonts[0]?.publicId || 'Arial')
+      setFontSize(12)
+      setAngle(0)
+      setColor('#ffffff')
+      setXPosition(0)
+      setYPosition(0)
     }
-  }, [modificationsList])
+  }, [state])
 
-  const handleSaveConfig = () => {
-    handleModification({ name: 'addText', value: { textContent, fontName, fontSize, angle, color, xPosition, yPosition } })
-    setNewModification(true)
-    setSomeChange(false)
-  }
-
-  const handleFontNameChange = (e) => {
-    setFontName(e.target.value)
-    setSomeChange(true)
-  }
-
-  const handleFontSizeChange = (e) => {
-    setFontSize(e.target.value)
-    setSomeChange(true)
-  }
-
-  const handleTextContentChange = (e) => {
-    setTextContent(e.target.value)
-    setSomeChange(true)
-  }
-
-  const handleColorChange = (color) => {
-    setColor(color.hex)
-    setSomeChange(true)
-  }
-
-  const handleAngleChange = (e) => {
-    setAngle(e.target.value)
-    setSomeChange(true)
-  }
-
-  const handleXPosition = (e) => {
-    setXPosition(e.target.value)
-    setSomeChange(true)
-  }
-
-  const handleYPosition = (e) => {
-    setYPosition(e.target.value)
-    setSomeChange(true)
-  }
+  useEffect(() => {
+    if (textContent) {
+      modificationHandler({ name: 'addText', value: { textContent, fontName, fontSize, angle, color, xPosition, yPosition } })
+    }
+  }, [textContent, fontName, fontSize, color, angle, xPosition, yPosition])
 
   return (
     <div className='flex-col'>
@@ -77,9 +56,9 @@ export default function TextEditor() {
       <div className='flex'>
         <Select
           className='flex-1'
-          name='fontExtension' value={fontName} onChange={handleFontNameChange}
+          name='fontExtension' value={fontName} onChange={(e) => setFontName(e.target.value)}
         >
-          {fonts.map((font) => <option key={font} value={font}>{font.split('.')[0]}</option>)}
+          {fonts.map((font) => <option key={font.publicId} value={font.publicId}>{font.name}</option>)}
           <option value='Arial'>Arial</option>
           <option value='Helvetica'>Helvetica</option>
           <option value='Times'>Times</option>
@@ -104,7 +83,7 @@ export default function TextEditor() {
             type='text'
             sizing='md'
             value={fontSize}
-            onChange={handleFontSizeChange}
+            onChange={(e) => setFontSize(e.target.value)}
           />
         </div>
       </div>
@@ -121,7 +100,7 @@ export default function TextEditor() {
           type='text'
           sizing='md'
           value={textContent}
-          onChange={handleTextContentChange}
+          onChange={(e) => setTextContent(e.target.value)}
         />
       </div>
       <div className='flex w-full'>
@@ -130,7 +109,7 @@ export default function TextEditor() {
           <div className='w-10 h-10 bg-slate-700 rounded-lg p-2' onClick={() => setShowColorPicker(!showColorPicker)}>
             <div style={{ backgroundColor: color }} className='w-full aspect-square rounded-sm' />
           </div>
-          {showColorPicker && <ChromePicker className='z-10 absolute bottom-full' color={color} onChange={handleColorChange} disableAlpha />}
+          {showColorPicker && <ChromePicker className='z-10 absolute bottom-full' color={color} onChange={(color) => setColor(color.hex)} disableAlpha />}
         </div>
         <div className='flex w-full mb-3'>
           <div className='w-4 pt-7 mx-3 text-white'>
@@ -150,7 +129,7 @@ export default function TextEditor() {
               min={0}
               max={360}
               value={angle}
-              onChange={handleAngleChange}
+              onChange={(e) => setAngle(e.target.value)}
             />
           </div>
           <p className='text-white self-end px-3 w-14 whitespace-nowrap text-center'>{angle}°</p>
@@ -178,7 +157,7 @@ export default function TextEditor() {
               type='text'
               sizing='sm'
               value={xPosition}
-              onChange={handleXPosition}
+              onChange={(e) => setXPosition(e.target.value)}
             />
           </div>
           <div className='flex'>
@@ -194,12 +173,11 @@ export default function TextEditor() {
               type='text'
               sizing='sm'
               value={yPosition}
-              onChange={handleYPosition}
+              onChange={(e) => setYPosition(e.target.value)}
             />
           </div>
         </div>
       </div>
-      {someChange && <Button className='mx-auto mt-5' disabled={!someChange} onClick={handleSaveConfig}>Save configuration</Button>}
     </div>
   )
 }

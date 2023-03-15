@@ -1,7 +1,7 @@
-import useDesign from '@/hooks/useDesign'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import ShapeOption from './ShapeOption'
-import { Label, ToggleSwitch, TextInput, Button } from 'flowbite-react'
+import { Label } from 'flowbite-react'
+import { useProjectsContext } from '@/contexts/projects'
 
 const SHAPES = [
   { name: 'Triangle', publicId: 'v3q1oppjoh3m7weq1icx' },
@@ -9,66 +9,45 @@ const SHAPES = [
   { name: 'Pentagon', publicId: 'bcpezceepuik75fnurnl' },
   { name: 'Hexagon', publicId: 'i64v41879slh0i3tk8qr' }]
 
-export default function ShapeInput() {
-  const { originalDimensions, handleModification, setNewModification, modificationsList } = useDesign()
-  const [fullSize, setFullSize] = useState(true)
-  const [shapeWidth, setShapeWidth] = useState('')
-  const [shapeHeight, setShapeHeight] = useState('')
-  const [activeShape, setActiveShape] = useState('')
-  const [someChange, setSomeChange] = useState(false)
+export default function ShapeInput({ modificationHandler }) {
+  const { state } = useProjectsContext()
+  const { originalImage, modifications } = state.currentProject
+  const { dimensions } = originalImage
+  const [activeShape, setActiveShape] = useState({})
 
   useEffect(() => {
-    setShapeWidth(originalDimensions?.width)
-    setShapeHeight(originalDimensions?.height)
-  }, [originalDimensions])
-
-  console.log(activeShape)
-  useEffect(() => {
-    if (modificationsList.addShape) {
-      const shapeConfig = modificationsList.addShape
-      console.log(shapeConfig.shapeName)
-      setActiveShape({ name: shapeConfig.shapeName, publicId: shapeConfig.publicId })
-      setShapeWidth(shapeConfig.shapeDimensions.width)
-      setShapeHeight(shapeConfig.shapeDimensions.height)
+    const newModificationsList = [...modifications]
+    newModificationsList.reverse()
+    const currentModification = newModificationsList.find(modification => modification.name === 'addShape')
+    if (currentModification) {
+      const { shapeName, shapePublicId } = currentModification.value
+      setActiveShape({ name: shapeName, publicId: shapePublicId })
+    } else {
+      setActiveShape({})
     }
-  }, [modificationsList])
-
-  const handleSaveConfig = () => {
-    handleModification({
-      name: 'addShape',
-      value: {
-        shapeName: activeShape.name,
-        shapePublicId: activeShape.publicId,
-        shapeDimensions: { width: shapeWidth, height: shapeHeight }
-      }
-    })
-    setNewModification(true)
-    setSomeChange(false)
-  }
+  }, [state])
 
   const handleShapeChange = ({ name, publicId }) => {
     if (activeShape.name === name) {
+      modificationHandler({ name: 'addShape', value: {} })
       setActiveShape({})
-    } else {
-      setActiveShape({ name, publicId })
+      return
     }
-    setSomeChange(true)
-  }
 
-  const handleFullSize = (e) => {
-    setFullSize(!fullSize)
-    setShapeWidth(originalDimensions.width)
-    setShapeHeight(originalDimensions.height)
-    setSomeChange(true)
-  }
+    const { modifications } = state.currentProject
+    const resizeModification = modifications.find(modification => modification.name === 'resizeImage')
+    const width = resizeModification?.value?.width || dimensions?.width
+    const height = resizeModification?.value?.height || dimensions?.height
 
-  const handleWidthChange = (e) => {
-    setShapeWidth(e.target.value)
-    setSomeChange(true)
-  }
-  const handleHeightChange = (e) => {
-    setShapeHeight(e.target.value)
-    setSomeChange(true)
+    modificationHandler({
+      name: 'addShape',
+      value: {
+        shapeName: name,
+        shapePublicId: publicId,
+        shapeDimensions: { width, height }
+      }
+    })
+    setActiveShape({ name, publicId })
   }
 
   return (
@@ -79,55 +58,10 @@ export default function ShapeInput() {
       />
       <div className='flex w-72 mx-auto justify-between my-4'>
         {SHAPES.map(({ name, publicId }) => {
-          const isActive = (name === activeShape.name) || (publicId === activeShape.name)
+          const isActive = name === activeShape.name
           return <ShapeOption key={name} name={name} image={name} active={isActive} selectHandler={() => handleShapeChange({ name, publicId })} />
         })}
       </div>
-      {activeShape.name && (
-        <ToggleSwitch
-          className='my-8'
-          checked={fullSize}
-          label='Fit to image'
-          onChange={handleFullSize}
-        />
-      )}
-
-      <div className={`flex justify-center ${fullSize && 'hidden'}`}>
-        <div className='mb-2 block'>
-          <Label
-            className='mr-3'
-            htmlFor='width'
-            value='Width'
-          />
-        </div>
-        <TextInput
-          id='width'
-          type='text'
-          sizing='sm'
-          value={shapeWidth || ''}
-          disabled={fullSize}
-          className='w-14'
-          onChange={handleWidthChange}
-        />
-        <div className='mb-2 block'>
-          <Label
-            className='ml-5 mr-3'
-            htmlFor='height'
-            value='Height'
-          />
-        </div>
-        <TextInput
-          id='Height'
-          type='text'
-          sizing='sm'
-          value={shapeHeight || ''}
-          disabled={fullSize}
-          className='w-14'
-          onChange={handleHeightChange}
-        />
-      </div>
-      {someChange && <Button className='mx-auto mt-5' onClick={handleSaveConfig}>Save configuration</Button>}
-
     </div>
   )
 }

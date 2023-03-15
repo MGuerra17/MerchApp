@@ -65,6 +65,17 @@ const addText = (image, { textContent, fontName, fontSize, angle, color, xPositi
   return textContent ? image.overlay(source(text(textContent, textConfig).textColor(color).transformation(new Transformation().rotate(byAngle(angle)))).position(new Position().offsetX(xPosition || 0).offsetY(yPosition || 0))) : image
 }
 
+// FUNCTIONS HELPERS
+
+const getCurrentModifications = (modifications) => {
+  const newModificationsList = modifications.map(modification => ({ ...modification }))
+  newModificationsList.reverse()
+  const currentModifications = newModificationsList.filter((modification, index, self) => {
+    return index === self.findIndex((element) => element.name === modification.name)
+  })
+  return currentModifications.reverse()
+}
+
 export default {
   createImage,
   resizeImage,
@@ -80,5 +91,6 @@ export default {
   addText,
   rotateImage,
   roundCorners,
-  roundCircle
+  roundCircle,
+  getCurrentModifications
 }

@@ -1,7 +1,7 @@
-import useDesign from '@/hooks/useDesign'
 import Dropzone from 'dropzone'
 import { useEffect, useState } from 'react'
 import { Label, TextInput, Select } from 'flowbite-react'
+import { useProjectsContext } from '@/contexts/projects'
 
 export default function FontUploader() {
   const [fontName, setFontName] = useState('')
@@ -9,7 +9,7 @@ export default function FontUploader() {
   const [warning, setWarning] = useState('')
   const [uploaded, setUploaded] = useState(false)
   const [success, setSuccess] = useState(false)
-  const { saveFont, fonts } = useDesign()
+  const { state, addFont } = useProjectsContext()
 
   useEffect(() => {
     const dropzoneForm = new Dropzone('#uploadFont', {
@@ -26,7 +26,7 @@ export default function FontUploader() {
     dropzoneForm.on('success', (file, response) => {
       setUploaded(true)
       setSuccess(true)
-      saveFont(response.public_id)
+      addFont({ name: fontName, publicId: response.public_id })
     })
 
     dropzoneForm.on('error', (file, response) => {
@@ -48,7 +48,7 @@ export default function FontUploader() {
   const handleFontNameChange = (e) => {
     const fontNameValue = e.target.value
     setSuccess(false)
-    if (fonts.includes(fontNameValue + '.' + fontType)) {
+    if (state.fonts.includes(fontNameValue + '.' + fontType)) {
       setWarning('Esta fuente ya existe')
     } else if (fontNameValue === '') {
       setWarning('Debe ingresar un nombre valido')
@@ -60,7 +60,7 @@ export default function FontUploader() {
 
   const handleFontTypeChange = (e) => {
     const fontTypeValue = e.target.value
-    if (fonts.includes(fontName + '.' + fontTypeValue)) {
+    if (state.fonts.includes(fontName + '.' + fontTypeValue)) {
       setWarning('Esta fuente ya existe')
     } else if (fontType === '') {
       setWarning('Debe ingresar un nombre valido')
