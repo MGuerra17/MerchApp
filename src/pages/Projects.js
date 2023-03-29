@@ -35,13 +35,13 @@ export default function ShowResults() {
             </div>
           )
         })}
-        {projects?.length < 1 && (
-          <div>
-            <h3 className='text-center text-2xl font-semibold text-white mb-10'>Nothing here. <a href='/generateMerch' className='text-blue-700 hover:text-blue-800 hover:underline hover:decoration-solid  '>Create yor first design!</a> </h3>
-            <Image src='/Add-Files.png' width={400} height={300} alt='add file illustration' />
-          </div>
-        )}
       </div>
+      {projects?.length < 1 && (
+        <div>
+          <h3 className='text-center text-2xl font-semibold text-white mb-10'>Nothing here. <a href='/generateMerch' className='text-blue-700 hover:text-blue-800 hover:underline hover:decoration-solid  '>Create yor first design!</a> </h3>
+          <Image className='mx-auto px-10 md:px-0' src='/Add-Files.png' width={400} height={300} alt='add file illustration' />
+        </div>
+      )}
     </>
   )
 }
